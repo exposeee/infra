@@ -1,0 +1,51 @@
+---
+
+- name: Install Packages
+  package: name={{ item }} state=latest
+  with_items:
+    - build-essential
+    - npm
+    - nodejs
+    - git
+    - nginx
+    - curl
+
+- name: Copy Private Key
+  copy:
+    src: ~/.ssh/id_rsa
+    dest: /root/.ssh/id_rsa
+    mode: 0600
+
+- name: Ensure app directory
+  file:
+    dest: '/opt/exposeee-app'
+    state: directory
+
+- name: Git Clone Repo
+  git:
+    repo: git@github.com:exposeee/exposeee-app.git
+    dest: '/opt/exposeee-app'
+    version: master
+    accept_hostkey: true
+    force: true
+
+- name: Ensure .env
+  template:
+    src: "env.j2"
+    dest: /opt/exposeee-app/.env
+
+- name: Running NPM install
+  command: npm install
+  args:
+    chdir: /opt/exposeee-app/
+
+- name: npm build
+  command: npm run build
+  args:
+    chdir: /opt/exposeee-app/
+
+- name: Copy bundle to /var/www/html
+  command: cp -R . /var/www/html
+  args:
+    chdir: /opt/exposeee-app/build/
+  notify: restart nginx

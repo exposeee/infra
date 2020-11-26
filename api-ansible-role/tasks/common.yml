@@ -1,0 +1,23 @@
+---
+# Install common packages and do basic configuration stuff
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    update_cache: true
+    upgrade: true
+
+- name: Ensure packages required for the application
+  package: name={{ item }} state=latest
+  with_items: '{{ app_packages }}'
+
+- name: Install the latest pip version
+  pip: name=pip extra_args='-U'
+
+- name: Ensure application user
+  user: name={{ app_user }} group={{ app_user }} createhome=no
+
+- name: Ensure app directory
+  file: dest={{ app_directory }} state=directory
+
+- name: Ensure app log directory
+  file: dest={{ app_log_directory }} state=directory

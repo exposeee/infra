@@ -1,0 +1,10 @@
+---
+# Main setup/provision task
+
+- include: ssh_key.yml
+
+- include: common.yml
+
+- include: supervisor.yml
+
+- include: nginx.yml

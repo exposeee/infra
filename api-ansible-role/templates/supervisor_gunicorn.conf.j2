@@ -1,0 +1,9 @@
+[program:{{ app_name }}]
+command = /opt/gunicorn_start
+user = {{ app_user }}
+startretries=3
+autostart=true
+autorestart=true
+stopwaitsecs = 60
+stdout_logfile = {{ app_log_directory }}/{{ app_name }}.log
+stderr_logfile = {{ app_log_directory }}/{{ app_name }}.error.log

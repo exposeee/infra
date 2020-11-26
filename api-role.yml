@@ -1,0 +1,8 @@
+---
+
+- name: Test the ansible-django-api role
+  hosts: all
+  remote_user: root
+  become: true
+  roles:
+    - role: api-ansible-role

@@ -1,0 +1,33 @@
+---
+# Install nginx
+
+- name: Install nginx
+  package: name=nginx state=present
+  notify: restart nginx
+
+- name: remove default nginx site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: remove default nginx site
+  file: path=/etc/nginx/sites-available/default state=absent
+
+- name: ensure log directory
+  file: dest=/var/log/nginx state=directory
+  notify: restart nginx
+
+- name: Create nginx virtual host for application
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+  notify: restart nginx
+
+- name: Enable virtual host
+  file:
+    src: /etc/nginx/sites-available/{{ app_name }}
+    dest: /etc/nginx/sites-enabled/{{ app_name }}
+    state: link
+
+- name: open firewall for nginx
+  ufw:
+    rule: allow
+    name: Nginx Full

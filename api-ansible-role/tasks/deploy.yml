@@ -1,0 +1,27 @@
+---
+# Deploy the application
+
+- name: Checkout the latest source code
+  git:
+    repo={{ app_repository }}
+    dest={{ app_directory }}
+    version={{ app_version }}
+    accept_hostkey=true
+    force=yes
+
+- name: Ensure .env
+  template:
+    src: "env.j2"
+    dest: "{{ app_directory }}/.env"
+
+- name: Install application dependencies
+  pip:
+    chdir: "{{ app_directory }}"
+    requirements: "requirements.txt"
+    state: present
+
+- name: restart nginx
+  systemd: name=nginx state=restarted enabled=yes
+
+- name: Ensure application is restartet
+  service: name=supervisor state=restarted

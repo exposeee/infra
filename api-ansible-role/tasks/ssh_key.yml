@@ -1,0 +1,13 @@
+---
+
+- name: Ensure GitHub deploy key is present on the server.
+  copy:
+    src: ~/.ssh/id_rsa
+    dest: /root/.ssh/id_rsa
+    mode: 0600
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+
+# See: https://stackoverflow.com/a/37096534/100134
+- name: Ensure setfacl support is present.
+  package: name=acl

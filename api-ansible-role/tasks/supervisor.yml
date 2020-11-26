@@ -1,0 +1,18 @@
+---
+# Install supervisor
+
+- name: Install supervisor
+  package: name=supervisor state=present
+  notify: restart supervisor
+
+- name: Ensure supervisor gunicorn config for app
+  template:
+    src: supervisor_gunicorn.conf.j2
+    dest: /etc/supervisor/conf.d/{{ app_name }}.conf
+  notify: restart supervisor
+
+- name: Ensure gunicorn startup script
+  template:
+    src: gunicorn_start.j2
+    dest: /opt/gunicorn_start
+    mode: 0755

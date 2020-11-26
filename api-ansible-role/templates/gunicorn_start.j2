@@ -1,0 +1,25 @@
+#!/bin/bash
+
+NAME={{ app_name }}
+APPDIR={{ app_directory }}
+VENVDIR=$APPDIR/{{ app_env }}
+SOCKFILE=$APPDIR/{{ app_name }}.sock
+NUM_WORKERS=2
+HOST=127.0.0.1
+PORT={{ app_port }}
+
+echo "Starting $NAME"
+
+# activate the virtualenv
+# cd $VENVDIR
+# source bin/activate
+
+export PYTHONPATH=$APPDIR:$PYTHONPATH
+
+# Create the run directory if it doesn't exist
+RUNDIR=$(dirname $SOCKFILE)
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+# Start gunicorn
+cd $APPDIR
+exec gunicorn --workers 3 --bind $HOST:$PORT {{ app_wsgi_module }}:application
