@@ -1,5 +1,11 @@
 ---
 
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    update_cache: true
+    upgrade: true
+
 - name: Install Packages
   package: name={{ item }} state=latest
   with_items:

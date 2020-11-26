@@ -1,2 +1,2 @@
-do_token = ""
-ssh_fingerprint = ""
+digitalocean_do_token = ""
+digitalocean_ssh_fingerprint = ""
