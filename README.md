@@ -8,14 +8,6 @@ This demo will create the following infrastructure using Terraform:
 - One DigitalOcean Load Balancer to route HTTP traffic to the Droplets
 - One DigitalOcean Cloud Firewall to lock down communication between the Droplets and the outside world
 
-We will then use Ansible to run the following tasks on both Droplets:
-
-- Update all packages
-- Install the DigitalOcean monitoring agent, to enable resource usage graphs in the Control Panel
-- Install the Nginx web server software
-- Install a demo `index.html` that shows Sammy and the Droplet's hostname
-
-
 ## Prerequisites
 
 You will need the following software installed to complete this demo:
@@ -139,14 +131,3 @@ $ terraform destroy
 ```
 
 This will delete everything we set up for the demo. Or, you could build upon this configuration to deploy your own web site or application! Read on for suggestions of further resources that might help.
-
-
-## Conclusion
-
-This demo was a quick intro into Terraform and Ansible. You are encouraged to take a look at the `terraform.tf` file to learn more about what we did with Terraform, and `ansible.yml` to see the tasks that Ansible performed. For more information on Ansible and Terraform, check out the following sources:
-
-- [How To Use Terraform with DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean#install-terraform)
-- [How to Install and Configure Ansible on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-16-04)
-- [The official Terraform documentation](https://www.terraform.io/docs/)
-- [The official Ansible documentation](https://docs.ansible.com/ansible/latest/index.html)
-- [The DigitalOcean API documentation](https://developers.digitalocean.com/documentation/v2/) can be useful when specifying DigitalOcean resources in Terraform
