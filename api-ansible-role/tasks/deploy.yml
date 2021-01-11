@@ -19,6 +19,8 @@
     chdir: "{{ app_directory }}"
     requirements: "requirements.txt"
     state: present
+  environment:
+    LD_LIBRARY_PATH: /opt/deps/lib
 
 - name: restart nginx
   systemd: name=nginx state=restarted enabled=yes

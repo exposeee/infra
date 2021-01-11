@@ -1,0 +1,44 @@
+---
+
+- name: Ensure packages required for libpostal
+  apt:
+    name: linux-libc-dev
+    state: present
+
+- name: Add ubuntu-toolchain-r stable repository from PPA
+  apt_repository:
+    repo: ppa:ubuntu-toolchain-r/test
+
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    update_cache: true
+    upgrade: true
+
+- name: Ensure packages required for libpostal
+  apt:
+    pkg:
+      - gcc-7
+      - libsnappy-dev
+
+- name: Ensure app directory
+  file: dest="/opt/deps" state=directory
+
+- name: Checkout the latest libpostal source code
+  git:
+    repo='https://github.com/openvenues/libpostal'
+    dest='/opt/libpostal'
+    force=yes
+
+- name: Ensure libpostal dependencies
+  become: true
+  shell: |
+    ./bootstrap.sh
+    ./configure --datadir=$(pwd)/data --prefix=$(realpath $(pwd)/../deps) --bindir=$(realpath $(pwd)/../deps)
+    make install
+    ldconfig /opt/deps/lib
+  args:
+    chdir: /opt/libpostal
+  environment:
+    LD_LIBRARY_PATH: /opt/deps/lib
+    CC: gcc-7

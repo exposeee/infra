@@ -10,8 +10,8 @@
   package: name={{ item }} state=latest
   with_items: '{{ app_packages }}'
 
-- name: Install the latest pip version
-  pip: name=pip extra_args='-U'
+# - name: Install the latest pip version
+#   pip: name=pip extra_args='-U'
 
 - name: Ensure application user
   user: name={{ app_user }} group={{ app_user }} createhome=no
