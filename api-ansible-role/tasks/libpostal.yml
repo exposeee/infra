@@ -1,44 +1,39 @@
 ---
 
-- name: Ensure packages required for libpostal
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
   apt:
-    name: linux-libc-dev
-    state: present
-
-- name: Add ubuntu-toolchain-r stable repository from PPA
-  apt_repository:
-    repo: ppa:ubuntu-toolchain-r/test
-
-- name: Update and upgrade apt packages
-  become: true
-  apt:
-    update_cache: true
-    upgrade: true
+    update_cache: yes
+    cache_valid_time: 3600
 
 - name: Ensure packages required for libpostal
   apt:
     pkg:
+      - autoconf
+      - automake
+      - build-essential
+      - curl
       - gcc-7
       - libsnappy-dev
+      - libtool
+      - pkg-config
 
-- name: Ensure app directory
-  file: dest="/opt/deps" state=directory
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /opt/deps
+    state: directory
+    mode: '0755'
 
-- name: Checkout the latest libpostal source code
+- name: Git clone on libpostal
   git:
-    repo='https://github.com/openvenues/libpostal'
-    dest='/opt/libpostal'
-    force=yes
+    repo: 'https://github.com/openvenues/libpostal.git'
+    dest: /opt/libpostal
 
-- name: Ensure libpostal dependencies
+- name: Compile libpostal
   become: true
-  shell: |
+  ansible.builtin.shell: |
     ./bootstrap.sh
-    ./configure --datadir=$(pwd)/data --prefix=$(realpath $(pwd)/../deps) --bindir=$(realpath $(pwd)/../deps)
+    ./configure --datadir= --prefix=/opt/deps
     make install
     ldconfig /opt/deps/lib
   args:
     chdir: /opt/libpostal
-  environment:
-    LD_LIBRARY_PATH: /opt/deps/lib
-    CC: gcc-7
