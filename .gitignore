@@ -9,6 +9,11 @@ secrets.yml
 *.retry
 inventory
 *-inventory
+*-inventory-local
 .python-version
 
 *env.j2
+
+**/*.DS_Store
+
+**/.vagrant/*

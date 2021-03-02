@@ -6,3 +6,8 @@
   become: true
   roles:
     - role: api-ansible-role
+  environment:
+    CC: gcc-7
+    CFLAGS: -I/opt/deps/include
+    LDFLAGS: -L/opt/deps/lib
+    LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/opt/deps/lib

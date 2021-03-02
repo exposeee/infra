@@ -1,0 +1,31 @@
+---
+
+- name: Test the ansible-postgres-db role
+  hosts: all
+  remote_user: root
+  vars:
+    postgresql_python_library: python3-psycopg2
+    postgresql_databases:
+      - name: exposeee
+        owner: exposeee
+        state: present
+    postgresql_users:
+      - name: exposeee
+        password: "{{ database_password }}"
+        db: exposeee
+        state: present
+    postgresql_global_config_options:
+      - option: listen_addresses
+        value: "*"
+    postgresql_hba_entries:
+      - {type: host, database: exposeee, user: all, address: 0.0.0.0/0, auth_method: md5}
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        update_cache: true
+        upgrade: true
+
+    - name: Include the postgres role
+      include_role:
+        name: geerlingguy.postgresql
