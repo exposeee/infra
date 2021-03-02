@@ -1,4 +1,4 @@
-# DigitalOcean Terraform and Ansible For A Dango API
+# DigitalOcean Terraform and Ansible For A ReacJS // Django project
 
 This repository contains [Terraform](https://www.terraform.io/) and [Ansible](https://www.ansible.com/) configurations to launch and set up some basic infrastructure on DigitalOcean. As server deployments and development teams continue to get larger and more complex, the practice of defining infrastructure as version-controlled code has taken off. Tools such as Ansible and Terraform allow you to clearly define the servers you need (and firewalls, load balancers, etc.) and the configuration of the operating system and software on those servers.
 
@@ -10,17 +10,19 @@ This demo will create the following infrastructure using Terraform:
 
 ## Prerequisites
 
-You will need the following software installed to complete this demo:
+You will need the following software installed:
 
-- **Git:** You'll use Git to download this repository to your computer. You can learn how to install Git on Linux, macOS, or Windows by reading our [Getting Started with Git](https://www.digitalocean.com/community/tutorials/contributing-to-open-source-getting-started-with-git) guide
+- **Git:**
 - **Terraform:** Terraform will control your server and load balancer infrastructure. To install it locally, read the _Install Terraform_ section of [How To Use Terraform with DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean#install-terraform)
-- **Ansible:** Ansible is used to configure the servers after Terraform has created them. [The official Ansible documentation](https://docs.ansible.com/ansible/latest/intro_installation.html) has installation instructions for a variety of operating systems
+- **Ansible:**
 
 **You will also need an SSH key set up on your local computer**, with the public key uploaded to the DigitalOcean Control Panel. You can find out how to do that using our tutorial [How To Use SSH Keys with DigitalOcean Droplets](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets).
 
-Finally, **you will need a personal access token for the DigitalOcean API**. You can find out more about the API and how to generate a token by reading [How To Use the DigitalOcean API v2](https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-api-v2)
+**You will need a personal access token for the DigitalOcean API**. You can find out more about the API and how to generate a token by reading [How To Use the DigitalOcean API v2](https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-api-v2)
 
-When you have the software, an SSH key, and an API token, proceed to the first step.
+Finally, **you will need a personal access token, account id and a domain for the DNSimple API**. You can find out more about the API and how to generate a token by reading [How To Use the DNSimple API v2](https://developer.dnsimple.com/v2/)
+
+When you have the software, an SSH key, and the APIs tokens, proceed to the first step.
 
 
 ## Step 1 — Clone the Repository and Configure
@@ -28,13 +30,13 @@ When you have the software, an SSH key, and an API token, proceed to the first s
 First, download the repository to your local computer using `git clone`. Make sure you're in the directory you'd like to download to, then enter the following command:
 
 ```
-$ git clone https://github.com/do-community/terraform-ansible-demo.git
+$ git clone https://github.com/exposeee/infra.git
 ```
 
 Navigate to the resulting directory:
 
 ```
-$ cd terraform-ansible-demo
+$ cd infra
 ```
 
 We need to update a few variables to let Terraform know about our keys and tokens. Terraform will look for variables in any `.tfvars` file. An example file is included in the repo. Copy the example file to to a new file, removing the `.example` extension:
@@ -48,6 +50,10 @@ Open the new file in your favorite text editor. You'll see the following:
 ```
 do_token = ""
 ssh_fingerprint = ""
+
+dnsimple_token = ""
+dnsimple_account = ""
+dnsimple_domain = ""
 ```
 
 Fill in each variable:
@@ -68,6 +74,10 @@ Fill in each variable:
   ```
 
   **Copy everything _except_ the initial `MD5:`** and paste it into the variable.
+
+- **dnsimple_token:** is your personal access token for the DNSimple API.
+- **dnsimple_account:** is your personal account id for the DNSimple API.
+- **dnsimple_domain:** is a domain register in your DNSimple account.
 
 Now we can initialize Terraform. This will download some information for the DigitalOcean Terraform _provider_, and check our configuration for errors.
 
@@ -97,32 +107,29 @@ Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-ip = 203.0.113.11
+api-ip = 203.0.113.11
+
+app-ip = 203.0.113.12
 ```
 
-This is the IP of your new load balancer. If you navigate to it in your browser, you'll get an error: the Droplets aren't serving anything yet!
+This is the IP of your a ReactJS application and the Django rest API. If you navigate to it in your browser, you'll get an error: the Droplets aren't serving anything yet!
 
-Let's fix that by running Ansible to finish setting up the servers:
+
+Let first copy the django project env example file and remove the `.example` extension:
 
 ```
-$ ansible-playbook -i inventory ansible.yml
+$ cp api-ansible-role/templates/env.j2.example api-ansible-role/templates/env.j2
 ```
 
-Ansible will output some status information as it works through the tasks we've defined in `ansible.yml`. When it's done, the two Droplets will both be serving a unique web page that shows the hostname of the server.
+Don't forget to edit the new file adding the correct variable values.
+Now let's run Ansible to finish setting up the servers:
 
-Go back to your browser and enter the load balancer IP again. It may take a few moments to start working, as the load balancer needs to run some health checks before putting the Droplets back into its round-robin rotation. After a minute or so the demo web page with Sammy the shark will load:
+```
+$ ansible-playbook -i inventory api-inventory.yml
+$ ansible-playbook -i inventory app-inventory.yml
+```
 
-![Demo web page with Sammy the shark and a hostname](https://assets.digitalocean.com/articles/tf-ansible-demo/demo-page.png)
-
-If you refresh the page, you'll see the hostname toggle back and forth as the load balancer distributes the requests between both backend servers (some browsers cache more heavily than others, so you may have to hold `SHIFT` while refreshing to actually send a new request to the load balancer).
-
-Take some time to browse around the DigitalOcean Control Panel to see what you've set up. Notice the two Droplets, `demo-01` and `demo-02` in your **Droplets** listing. Navigate to the **Networking** section and take a look at the `demo-lb` load balancer:
-
-![DigitalOcean load balancer interface ](https://assets.digitalocean.com/articles/tf-ansible-demo/load-balancer.png)
-
-In the **Firewalls** tab, you can investigate the `demo-firewall` entry. Notice how the Droplets are set up to only accept web traffic from the load balancer:
-
-![DigitalOcean firewall rules interface](https://assets.digitalocean.com/articles/tf-ansible-demo/firewall.png)
+Ansible will output some status information as it works through the tasks we've defined in `*-inventory.yml`. When it's done, the two Droplets will be serving a two different web page.
 
 When you're done exploring, you can destroy all of the demo infrastructure using Terraform:
 
@@ -130,4 +137,42 @@ When you're done exploring, you can destroy all of the demo infrastructure using
 $ terraform destroy
 ```
 
-This will delete everything we set up for the demo. Or, you could build upon this configuration to deploy your own web site or application! Read on for suggestions of further resources that might help.
+This will delete everything we set up.
+
+## Local test
+
+The local test requires the use of `vagrant` virtual machine:
+
+- First copy the three local inventory files.
+
+```
+$ cp db-inventory-local.example db-inventory-local
+$ cp api-inventory-local.example api-inventory-local
+$ cp app-inventory-local.example app-inventory-local
+```
+
+- Change the values in the local inventory files, for example:
+
+```
+  db-vbox-ip = '123.4.5.6'
+  api-vbox-ip = '123.4.5.7'
+  app-vbox-ip = '123.4.5.8'
+  database_password = 'abcdefg'
+```
+
+- And than you can provision each vbox in the following way:
+
+```
+$ vagrant up exposeee-db
+$ vagrant provision  exposeee-db
+```
+
+```
+$ vagrant up exposeee-api
+$ vagrant provision  exposeee-api
+```
+
+```
+$ vagrant up exposeee-app
+$ vagrant provision  exposeee-app
+```

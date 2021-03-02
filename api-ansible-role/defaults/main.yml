@@ -51,6 +51,7 @@ app_packages:
   - git
   - gunicorn
   - python{{ python_version }}
+  - python3-setuptools
   - python3-pip
   - python3-venv
   - python3-virtualenv
@@ -58,3 +59,13 @@ app_packages:
   - libssl-dev
   - libffi-dev
   - python-dev
+  - curl
+  - autoconf
+  - automake
+  - libtool
+  - pkg-config
+  - coreutils
+  - libsnappy-dev
+  - poppler-utils
+  - tesseract-ocr
+  - tesseract-ocr-deu

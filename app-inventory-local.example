@@ -1,0 +1,1 @@
+exposeee-app ansible_ssh_port=22 ansible_ssh_host=app-vbox-ip ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3 ansible_host=app-vbox-ip api_url=api-vbox-ip

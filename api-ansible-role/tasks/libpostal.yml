@@ -1,0 +1,41 @@
+---
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Ensure packages required for libpostal
+  apt:
+    pkg:
+      - autoconf
+      - automake
+      - build-essential
+      - curl
+      - gcc-7
+      - libsnappy-dev
+      - libtool
+      - pkg-config
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /opt/deps
+    state: directory
+    mode: '0755'
+
+- name: Git clone on libpostal
+  git:
+    repo: https://github.com/openvenues/libpostal.git
+    dest: /opt/libpostal
+
+- name: Compile libpostal
+  become: true
+  shell: |
+    ./bootstrap.sh
+    ./configure --datadir=$(pwd)/data --prefix=/opt/deps
+    make
+    make install
+    ldconfig /opt/deps/lib
+  args:
+    executable: /bin/bash
+    chdir: /opt/libpostal

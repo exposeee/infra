@@ -1,2 +1,6 @@
 digitalocean_do_token = ""
 digitalocean_ssh_fingerprint = ""
+
+dnsimple_token = ""
+dnsimple_account = ""
+dnsimple_domain = ""

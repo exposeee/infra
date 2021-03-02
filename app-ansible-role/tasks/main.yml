@@ -55,3 +55,9 @@
   args:
     chdir: /opt/exposeee-app/build/
   notify: restart nginx
+
+- name: Replace default nginx virtual host
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: restart nginx
