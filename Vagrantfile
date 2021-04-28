@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.verbose = "v"
       ansible.playbook = "app-role.yml"
       ansible.become = true
-      ansible.inventory_path = 'app-inventory-local'
+      ansible.inventory_path = 'inventories-local/app-inventory-local'
       ansible.host_key_checking = false
     end
   end
@@ -40,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.verbose = "v"
       ansible.playbook = "api-role.yml"
       ansible.become = true
-      ansible.inventory_path = 'api-inventory-local'
+      ansible.inventory_path = 'inventories-local/api-inventory-local'
       ansible.host_key_checking = false
     end
   end
@@ -57,7 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.verbose = "v"
       ansible.playbook = "db-role.yml"
       ansible.become = true
-      ansible.inventory_path = 'db-inventory-local'
+      ansible.inventory_path = 'inventories-local/db-inventory-local'
       ansible.host_key_checking = false
     end
   end

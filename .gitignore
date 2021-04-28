@@ -17,3 +17,5 @@ inventory
 **/*.DS_Store
 
 **/.vagrant/*
+
+.idea
