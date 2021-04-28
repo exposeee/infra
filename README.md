@@ -125,8 +125,8 @@ Don't forget to edit the new file adding the correct variable values.
 Now let's run Ansible to finish setting up the servers:
 
 ```
-$ ansible-playbook -i inventory api-inventory.yml
-$ ansible-playbook -i inventory app-inventory.yml
+$ ansible-playbook -i inventories/api-inventory api-role.yml
+$ ansible-playbook -i inventories/app-inventory app-role.yml
 ```
 
 Ansible will output some status information as it works through the tasks we've defined in `*-inventory.yml`. When it's done, the two Droplets will be serving a two different web page.
@@ -146,6 +146,7 @@ The local test requires the use of `vagrant` virtual machine:
 - First copy the three local inventory files.
 
 ```
+$ cd inventories-local
 $ cp db-inventory-local.example db-inventory-local
 $ cp api-inventory-local.example api-inventory-local
 $ cp app-inventory-local.example app-inventory-local
