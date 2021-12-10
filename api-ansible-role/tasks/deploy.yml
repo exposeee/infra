@@ -30,3 +30,13 @@
 
 - name: Ensure application is restartet
   service: name=supervisor state=restarted
+
+- name: enable rqworker
+  service:
+    name: rqworker
+    enabled: yes
+
+- name: restart rqworker
+  service:
+    name: rqworker
+    state: restarted

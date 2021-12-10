@@ -5,8 +5,10 @@
 
 - include: common.yml
 
-- include: libpostal.yml
-
 - include: supervisor.yml
 
 - include: nginx.yml
+
+- include: redis.yml
+
+- include: rqworker.yml
