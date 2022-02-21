@@ -22,4 +22,4 @@ test -d $RUNDIR || mkdir -p $RUNDIR
 
 # Start gunicorn
 cd $APPDIR
-exec gunicorn --workers 3 --bind $HOST:$PORT {{ app_wsgi_module }}:application
+exec gunicorn --workers 3 --timeout 60 --bind $HOST:$PORT {{ app_wsgi_module }}:application

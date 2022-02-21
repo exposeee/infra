@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     db.vm.box = 'ubuntu/focal64'
 
     db.vm.network :private_network, ip: '192.168.88.21'
-    db.vm.network :forwarded_port, guest: 5432, host: 5432
+    db.vm.network :forwarded_port, guest: 5432, host: 5431
     db.vm.hostname = 'db.local'
     db.vm.synced_folder '.', '/vagrant', disabled: true
 

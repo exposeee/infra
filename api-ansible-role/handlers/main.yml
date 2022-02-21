@@ -2,7 +2,11 @@
 # Defines handlers
 
 - name: restart nginx
-  service: name=nginx state=restarted
+  service:
+    name: nginx
+    state: restarted
 
 - name: restart supervisor
-  service: name=supervisor state=restarted
+  service:
+    name: supervisor
+    state: restarted
