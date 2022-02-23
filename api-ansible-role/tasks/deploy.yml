@@ -14,15 +14,27 @@
     src: "env.j2"
     dest: "{{ app_directory }}/.env"
 
+- name: Install gunicorn
+  pip:
+    virtualenv_python: "3.9"
+    virtualenv: "{{ app_env }}"
+    chdir: "{{ app_directory }}"
+    name: gunicorn
+    state: present
+
 - name: Install application dependencies
   pip:
+    virtualenv_python: "3.9"
+    virtualenv: "{{ app_env }}"
     chdir: "{{ app_directory }}"
     requirements: "requirements.txt"
     state: present
 
 - name: Run migrations
   shell:
-    cmd: ./manage.py migrate
+    cmd: |
+      source {{ app_env }}/bin/activate
+      {{ app_env }}/bin/python3.9 manage.py migrate
     chdir: "{{ app_directory }}"
 
 - name: restart nginx
