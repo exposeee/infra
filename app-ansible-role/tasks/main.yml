@@ -10,11 +10,18 @@
   package: name={{ item }} state=latest
   with_items:
     - build-essential
-    - npm
-    - nodejs
     - git
     - nginx
     - curl
+
+- name: Download setup script for nodejs
+  shell: curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+
+- name: Install Packages
+  package: name={{ item }} state=latest
+  with_items:
+    - npm
+    - nodejs
 
 - name: Copy Private Key
   copy:

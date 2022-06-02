@@ -9,6 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.private_key_path = '~/.vagrant.d/insecure_private_key'
 
   config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
     vb.memory = 4096
     vb.cpus = 2
   end
@@ -16,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define 'exposeee-app' do |app|
     app.vm.box = 'ubuntu/focal64'
 
-    app.vm.network :private_network, ip: '192.168.88.23'
+    app.vm.network :private_network, ip: '192.168.56.23'
     app.vm.hostname = 'app.local'
     app.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -32,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define 'exposeee-api' do |api|
     api.vm.box = 'ubuntu/focal64'
 
-    api.vm.network :private_network, ip: '192.168.88.22'
+    api.vm.network :private_network, ip: '192.168.56.22'
     api.vm.hostname = 'api.local'
     api.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -48,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define 'exposeee-db' do |db|
     db.vm.box = 'ubuntu/focal64'
 
-    db.vm.network :private_network, ip: '192.168.88.21'
+    db.vm.network :private_network, ip: '192.168.56.21'
     db.vm.network :forwarded_port, guest: 5432, host: 5431
     db.vm.hostname = 'db.local'
     db.vm.synced_folder '.', '/vagrant', disabled: true

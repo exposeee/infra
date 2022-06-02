@@ -4,7 +4,9 @@ After=network.target
 
 [Service]
 WorkingDirectory={{ app_directory }}
-ExecStart=python3 {{ app_directory }}/manage.py rqworker default
+ExecStart={{ app_directory }}/{{ app_env }}/bin/python3.9 {{ app_directory }}/manage.py rqworker default
+ExecReload={{ app_directory }}/{{ app_env }}/bin/python3.9 {{ app_directory }}/manage.py rqworker default
+
 
 [Install]
 WantedBy=multi-user.target

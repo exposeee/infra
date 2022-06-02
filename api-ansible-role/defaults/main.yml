@@ -44,12 +44,11 @@ app_post_hooks: []
 app_config:
 
 # The Python version which should be installed
-python_version: 3.8
+python_version: 3.9
 
 # The list of system packages required to build/run application.
 app_packages:
   - git
-  - gunicorn
   - python{{ python_version }}
   - python3-setuptools
   - python3-pip
