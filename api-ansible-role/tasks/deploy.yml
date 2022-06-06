@@ -20,6 +20,14 @@
     virtualenv: "{{ app_env }}"
     chdir: "{{ app_directory }}"
     name: gunicorn
+    state: absent
+
+- name: Install daphne
+  pip:
+    virtualenv_python: "3.9"
+    virtualenv: "{{ app_env }}"
+    chdir: "{{ app_directory }}"
+    name: daphne
     state: present
 
 - name: Install application dependencies

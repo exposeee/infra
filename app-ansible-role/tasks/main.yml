@@ -20,7 +20,6 @@
 - name: Install Packages
   package: name={{ item }} state=latest
   with_items:
-    - npm
     - nodejs
 
 - name: Copy Private Key

@@ -35,6 +35,8 @@ app_environment:
 
 app_wsgi_module: exposeee_api.wsgi
 
+app_asgi_module: exposeee_api.asgi
+
 # The list of custom commands to run before and after deploy. These commands
 # uses previously defined environment to run.
 app_pre_hooks: []

@@ -5,14 +5,24 @@
   package: name=supervisor state=present
   notify: restart supervisor
 
-- name: Ensure supervisor gunicorn config for app
-  template:
-    src: supervisor_gunicorn.conf.j2
-    dest: /etc/supervisor/conf.d/{{ app_name }}.conf
-  notify: restart supervisor
+- name: Remove supervisor gunicorn
+  file:
+    state: absent
+    path: /etc/supervisor/conf.d/{{ app_name }}.conf
 
-- name: Ensure gunicorn startup script
-  template:
-    src: gunicorn_start.j2
-    dest: /opt/gunicorn_start
+- name: Remove gunicorn startup script
+  file:
+    state: absent
+    path: /opt/gunicorn_start
+
+- name: Ensure daphne sockets
+  file:
+    path: /run/daphne/
+    state: directory
     mode: 0755
+
+- name: Ensure supervisor asgi config for app
+  template:
+    src: supervisor_asgi.conf.j2
+    dest: /etc/supervisor/conf.d/{{ app_name }}_asgi.conf
+  notify: restart supervisor
