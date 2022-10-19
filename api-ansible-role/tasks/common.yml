@@ -1,5 +1,10 @@
 ---
 # Install common packages and do basic configuration stuff
+- name: Ensure tesseract 5
+  apt_repository:
+    repo: 'ppa:alex-p/tesseract-ocr5'
+    state: present
+
 - name: Update and upgrade apt packages
   become: true
   apt:
